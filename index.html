@@ -488,7 +488,7 @@ box-shadow: var(--shadow-soft);
 }
 
 .video-placeholder {
-background: linear-gradient(135deg, rgba(27, 54, 93, 0.9) 0%, rgba(74, 144, 164, 0.8) 100%), url('data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+background: linear-gradient(135deg, rgba(27, 54, 93, 0.8) 0%, rgba(74, 144, 164, 0.7) 100%), url('images/demo video/A69F4336-6F78-49F0-B1CC-1C8A7ADA3BA3.jpeg');
 background-size: cover;
 background-position: center;
 aspect-ratio: 16/9;
@@ -521,6 +521,43 @@ transition: all 0.3s ease;
 .play-button:hover {
 background: var(--accent-orange);
 transform: scale(1.1);
+}
+
+.video-navigation {
+margin-top: 15px;
+text-align: center;
+}
+
+.video-counter {
+display: block;
+color: var(--text-color);
+font-size: 0.9rem;
+margin-bottom: 10px;
+font-weight: 500;
+}
+
+.video-dots {
+display: flex;
+justify-content: center;
+gap: 8px;
+}
+
+.dot {
+width: 12px;
+height: 12px;
+border-radius: 50%;
+background: var(--border-light);
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.dot.active {
+background: var(--accent-orange);
+transform: scale(1.2);
+}
+
+.dot:hover {
+background: var(--secondary-blue);
 }
 
 /* Performance optimizations */
@@ -586,10 +623,21 @@ outline-offset: 2px;
 <!-- Demo Video Section -->
 <div class="demo-section">
 <h3>🎥 Bekijk hoe het werkt</h3>
+<div class="video-carousel">
 <div class="video-container">
-<div class="video-placeholder" onclick="openDemoVideo()">
+<div class="video-placeholder" onclick="openVideoCarousel()">
 <div class="play-button">▶</div>
-<p><strong>Assessment Demo</strong><br><small>2 minuten overview</small></p>
+<p><strong>Assessment Demo Serie</strong><br><small>4 video's - Complete walkthrough</small></p>
+</div>
+<div class="video-navigation">
+<span class="video-counter">Video 1 van 4</span>
+<div class="video-dots">
+<span class="dot active"></span>
+<span class="dot"></span>
+<span class="dot"></span>
+<span class="dot"></span>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -741,17 +789,189 @@ console.log(' Typeform succesvol geladen');
 }
 });
 
-// Demo Video Function
-function openDemoVideo() {
-// Vervang door jouw YouTube URL of lokale video
-const videoUrl = "https://www.youtube.com/embed/YOUR_VIDEO_ID";
+// Video Carousel Function
+function openVideoCarousel() {
+// Array met alle 4 de video's
+const videos = [
+{
+path: 'images/demo video/veo30generatepreview_VEO3_SHOT_1__WANHOPIGE_JACHT_5_secondenCR_0_949d768e-cefe-4d00-ad68-e72b8805e745[839592].mp4',
+title: 'Video 1: Assessment Start'
+},
+{
+path: 'images/demo video/veo30generatepreview_VEO3_SHOT_2__NEDERLANDSE_BRIEFJES_PLAKKEN_0_381b407e-cec4-422d-9110-3b20b44a5fc2.mp4',
+title: 'Video 2: Vragen Invullen'
+},
+{
+path: 'images/demo video/veo30generatepreview_VEO3_SHOT_3__NEDERLANDSE_EUREKA_MOMENT_5__0_c92493c2-a507-40c8-9b1c-aad18d10809f[839594].mp4',
+title: 'Video 3: Analyse & Inzichten'
+},
+{
+path: 'images/demo video/veo30generatepreview_VEO3_SHOT_4__NEDERLANDSE_HAPPY_ENDING_5_s_0_35b497f2-7b91-4ba1-8549-442bbf8633f0[839595].mp4',
+title: 'Video 4: Resultaten & Rapport'
+}
+];
 
-// Of voor lokale video:
-// window.open('images/demo-video.mp4', '_blank');
+let currentVideoIndex = 0;
 
-alert('Voeg hier jouw video URL toe!\n\nOpties:\n1. YouTube: vervang YOUR_VIDEO_ID\n2. Lokale video: upload naar /images/ folder\n3. Vimeo of andere platform');
+// Maak fullscreen video modal
+const videoModal = document.createElement('div');
+videoModal.style.cssText = `
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(0,0,0,0.95);
+z-index: 20000;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+`;
 
-console.log('📹 Demo video geklikt');
+// Video container
+const videoContainer = document.createElement('div');
+videoContainer.style.cssText = `
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 90%;
+max-width: 800px;
+`;
+
+// Video titel
+const videoTitle = document.createElement('h3');
+videoTitle.style.cssText = `
+color: white;
+margin-bottom: 20px;
+font-size: 1.5rem;
+text-align: center;
+`;
+
+// Video element
+const videoElement = document.createElement('video');
+videoElement.controls = true;
+videoElement.autoplay = true;
+videoElement.style.cssText = `
+width: 100%;
+max-height: 70vh;
+border-radius: 8px;
+margin-bottom: 20px;
+`;
+
+// Navigatie controls
+const navContainer = document.createElement('div');
+navContainer.style.cssText = `
+display: flex;
+align-items: center;
+gap: 20px;
+margin-bottom: 20px;
+`;
+
+// Vorige knop
+const prevBtn = document.createElement('button');
+prevBtn.innerHTML = '◀ Vorige';
+prevBtn.style.cssText = `
+background: #F47C3C;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 16px;
+`;
+
+// Video teller
+const videoCounter = document.createElement('span');
+videoCounter.style.cssText = `
+color: white;
+font-size: 16px;
+min-width: 100px;
+text-align: center;
+`;
+
+// Volgende knop
+const nextBtn = document.createElement('button');
+nextBtn.innerHTML = 'Volgende ▶';
+nextBtn.style.cssText = `
+background: #F47C3C;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 16px;
+`;
+
+// Sluit knop
+const closeBtn = document.createElement('button');
+closeBtn.innerHTML = '× Sluiten';
+closeBtn.style.cssText = `
+background: rgba(255,255,255,0.2);
+color: white;
+border: 1px solid rgba(255,255,255,0.3);
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 16px;
+`;
+
+// Functie om video te laden
+function loadVideo(index) {
+videoElement.src = videos[index].path;
+videoTitle.textContent = videos[index].title;
+videoCounter.textContent = `${index + 1} van ${videos.length}`;
+prevBtn.disabled = index === 0;
+nextBtn.disabled = index === videos.length - 1;
+prevBtn.style.opacity = index === 0 ? '0.5' : '1';
+nextBtn.style.opacity = index === videos.length - 1 ? '0.5' : '1';
+}
+
+// Event listeners
+prevBtn.onclick = () => {
+if (currentVideoIndex > 0) {
+currentVideoIndex--;
+loadVideo(currentVideoIndex);
+}
+};
+
+nextBtn.onclick = () => {
+if (currentVideoIndex < videos.length - 1) {
+currentVideoIndex++;
+loadVideo(currentVideoIndex);
+}
+};
+
+closeBtn.onclick = () => document.body.removeChild(videoModal);
+videoModal.onclick = (e) => {
+if (e.target === videoModal) document.body.removeChild(videoModal);
+};
+
+// Automatisch naar volgende video na afloop
+videoElement.onended = () => {
+if (currentVideoIndex < videos.length - 1) {
+currentVideoIndex++;
+loadVideo(currentVideoIndex);
+}
+};
+
+// Bouw de modal
+navContainer.appendChild(prevBtn);
+navContainer.appendChild(videoCounter);
+navContainer.appendChild(nextBtn);
+
+videoContainer.appendChild(videoTitle);
+videoContainer.appendChild(videoElement);
+videoContainer.appendChild(navContainer);
+videoContainer.appendChild(closeBtn);
+
+videoModal.appendChild(videoContainer);
+document.body.appendChild(videoModal);
+
+// Laad eerste video
+loadVideo(0);
+
+console.log('📹 Video carousel geopend');
 }
 
 // CTA Button interaction tracking

@@ -572,10 +572,16 @@ box-shadow: var(--shadow-soft);
 }
 
 .recruitin-logo {
-max-width: 200px;
+max-width: 300px;
 height: auto;
-margin-bottom: 15px;
+margin-bottom: 20px;
 filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+transition: all 0.3s ease;
+}
+
+.recruitin-logo:hover {
+transform: scale(1.05);
+filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
 }
 
 .logo-tagline {
@@ -754,10 +760,7 @@ outline-offset: 2px;
 
 <!-- Recruitin Logo Section -->
 <div class="logo-section">
-<div class="logo-placeholder">
-<h2 style="color: #1B365D; font-size: 2.5rem; margin: 0; font-weight: 800;">RECRUITIN</h2>
-<div style="background: #F47C3C; height: 3px; width: 100px; margin: 10px auto;"></div>
-</div>
+<img src="images/Logo liggend kopie.png" alt="Recruitin Logo" class="recruitin-logo">
 <p class="logo-tagline">Dé recruitment specialist voor technische professionals</p>
 </div>
 

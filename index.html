@@ -201,6 +201,30 @@ box-shadow: 0 8px 25px rgba(244, 124, 60, 0.4);
 background: linear-gradient(135deg, #E67E22 0%, var(--accent-orange) 100%);
 }
 
+/* Video Controls */
+.video-controls {
+text-align: center;
+margin: 20px 0;
+}
+
+.video-play-btn {
+background: var(--gradient-cta);
+color: white;
+border: none;
+padding: 15px 30px;
+border-radius: 50px;
+font-size: 1.1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+box-shadow: var(--shadow-soft);
+}
+
+.video-play-btn:hover {
+transform: translateY(-2px);
+box-shadow: var(--shadow-elevated);
+}
+
 /* Rest of the content sections */
 .content-sections {
 margin-top: 60px;
@@ -530,12 +554,16 @@ document.addEventListener('DOMContentLoaded', function() {
   id="main-recruitment-video"
   class="main-video"
   controls
-  autoplay
-  muted
+  preload="metadata"
   onended="startTypeformAfterVideo()">
   <source src="images/recruitment APK.mp4" type="video/mp4">
   Je browser ondersteunt geen video.
 </video>
+</div>
+<div class="video-controls">
+<button class="video-play-btn" onclick="playVideoWithSound()" aria-label="Start Video met Geluid">
+🔊 VIDEO STARTEN
+</button>
 </div>
 <div class="alternative-cta">
 <p>Of start direct met het assessment:</p>
@@ -623,6 +651,29 @@ document.addEventListener('DOMContentLoaded', function() {
 // Enhanced Full Screen TypeForm
 document.addEventListener('DOMContentLoaded', function() {
 console.log('🚀 Recruitment APK Video-first versie geladen');
+
+// Video play with sound function
+window.playVideoWithSound = function() {
+  const video = document.getElementById('main-recruitment-video');
+  const playBtn = document.querySelector('.video-play-btn');
+  
+  if (video) {
+    video.muted = false; // Ensure sound is on
+    video.currentTime = 0; // Start from beginning
+    
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log('🔊 Video gestart met geluid');
+        playBtn.style.display = 'none'; // Hide play button after starting
+      }).catch(error => {
+        console.log('⚠️ Autoplay geblokkeerd door browser:', error);
+        // Fallback: gebruiker moet handmatig klikken
+        video.controls = true;
+      });
+    }
+  }
+};
 
 // Preload Typeform resources
 const link = document.createElement('link');

@@ -198,11 +198,63 @@ overflow: hidden;
 box-shadow: var(--shadow-soft);
 }
 
+.video-loading {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--accent-blue);
+font-size: 1.1rem;
+font-weight: 600;
+z-index: 10;
+display: none;
+}
+
+.video-loading::after {
+content: '...';
+animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+0%, 20% { content: '.'; }
+40% { content: '..'; }
+60%, 100% { content: '...'; }
+}
+
 .main-video {
 width: 100%;
 height: auto;
 aspect-ratio: 16/9;
 border-radius: 16px;
+background-color: #f3f4f6;
+}
+
+.video-controls {
+margin-top: 15px;
+text-align: center;
+}
+
+.video-control-btn {
+background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-hover) 100%);
+color: white;
+border: none;
+padding: 12px 24px;
+border-radius: 25px;
+font-size: 0.95rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+box-shadow: 0 4px 15px rgba(239, 125, 0, 0.3);
+}
+
+.video-control-btn:hover {
+background: linear-gradient(135deg, var(--accent-blue) 0%, var(--bright-blue) 100%);
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+}
+
+.play-icon {
+margin-right: 8px;
 }
 
 .alternative-cta {
@@ -585,15 +637,27 @@ document.addEventListener('DOMContentLoaded', function() {
 <h2>Recruitment APK Assessment</h2>
 <p class="video-intro">Ontdek in 7 minuten hoe je recruitment proces scoort ten opzichte van topbedrijven in jouw sector.</p>
 <div class="main-video-container">
+<div id="videoLoading" class="video-loading">Video wordt geladen</div>
 <video 
   id="main-recruitment-video"
   class="main-video"
   controls
-  preload="metadata"
+  preload="auto"
+  autoplay
+  muted
+  playsinline
+  onloadstart="showVideoLoading()"
+  oncanplay="hideVideoLoading()"
   onended="startTypeformAfterVideo()">
   <source src="images/recruitment APK.mp4" type="video/mp4">
   Je browser ondersteunt geen video.
 </video>
+
+<div class="video-controls">
+  <button id="playPauseBtn" class="video-control-btn" onclick="togglePlayPause()">
+    <span class="play-icon">▶️</span> Klik om geluid aan te zetten
+  </button>
+</div>
 </div>
 <div class="alternative-cta">
 <p>Of start direct met het assessment:</p>
@@ -696,14 +760,83 @@ link.href = 'https://embed.typeform.com';
 document.head.appendChild(link);
 });
 
+// Video control functions
+function togglePlayPause() {
+const video = document.getElementById('main-recruitment-video');
+const btn = document.getElementById('playPauseBtn');
+const playIcon = btn.querySelector('.play-icon');
+
+if (video.muted) {
+// Unmute and play with sound
+video.muted = false;
+video.currentTime = 0; // Start from beginning with sound
+video.play();
+playIcon.textContent = '🔊';
+btn.innerHTML = '<span class="play-icon">🔊</span> Geluid aan - Video speelt';
+setTimeout(() => {
+btn.style.opacity = '0.7';
+btn.style.pointerEvents = 'none';
+}, 2000);
+} else {
+// Toggle play/pause
+if (video.paused) {
+video.play();
+playIcon.textContent = '⏸️';
+btn.innerHTML = '<span class="play-icon">⏸️</span> Pauzeer';
+} else {
+video.pause();
+playIcon.textContent = '▶️';
+btn.innerHTML = '<span class="play-icon">▶️</span> Afspelen';
+}
+}
+}
+
+// Video loading functions
+function showVideoLoading() {
+const loading = document.getElementById('videoLoading');
+if (loading) {
+loading.style.display = 'block';
+}
+}
+
+function hideVideoLoading() {
+const loading = document.getElementById('videoLoading');
+if (loading) {
+loading.style.display = 'none';
+}
+}
+
+// Video event listeners
+document.addEventListener('DOMContentLoaded', function() {
+const video = document.getElementById('main-recruitment-video');
+const btn = document.getElementById('playPauseBtn');
+
+// Video starts muted for autoplay compliance
+video.addEventListener('play', function() {
+if (video.muted) {
+btn.style.display = 'block';
+}
+});
+
+video.addEventListener('ended', function() {
+btn.innerHTML = '<span class="play-icon">🔄</span> Opnieuw bekijken';
+btn.style.opacity = '1';
+btn.style.pointerEvents = 'auto';
+btn.onclick = function() {
+video.currentTime = 0;
+video.play();
+};
+});
+});
+
 // Function om Typeform te starten na video einde
 function startTypeformAfterVideo() {
 console.log('📹 Video beëindigd - start Typeform automatisch');
 
-// Wacht 2 seconden voor smooth transition
+// Wacht 3 seconden for smooth transition
 setTimeout(() => {
 openFullScreenAssessment();
-}, 2000);
+}, 3000);
 }
 
 // Enhanced Open Full Screen Assessment

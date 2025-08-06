@@ -462,12 +462,15 @@ grid-template-columns: 1fr;
 
 <!-- Pipedrive Leadbooster Chatbot -->
 <script>
+// Pipedrive LeadBooster Configuration
 window.pipedriveLeadboosterConfig = {
   base: 'leadbooster-chat.pipedrive.com',
   companyId: 14438360,
   playbookUuid: '4bbd5a56-e01e-4015-aeba-060a4e27e5c1',
   version: 2
 };
+
+// Initialize LeadBooster
 (function () {
   var w = window;
   if (w.LeadBooster) {
@@ -475,13 +478,33 @@ window.pipedriveLeadboosterConfig = {
   } else {
     w.LeadBooster = {
       q: [],
-      on: function (n, h) {this.q.push({ t: 'o', n: n, h: h });},
-      trigger: function (n) {this.q.push({ t: 't', n: n });}
+      on: function (n, h) {
+        this.q.push({ t: 'o', n: n, h: h });
+      },
+      trigger: function (n) {
+        this.q.push({ t: 't', n: n });
+      }
     };
   }
 })();
+
+// Debug logging
+console.log('Pipedrive LeadBooster config:', window.pipedriveLeadboosterConfig);
+
+// Load the script after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  var script = document.createElement('script');
+  script.src = 'https://leadbooster-chat.pipedrive.com/assets/loader.js';
+  script.async = true;
+  script.onload = function() {
+    console.log('Pipedrive LeadBooster loaded successfully');
+  };
+  script.onerror = function() {
+    console.error('Failed to load Pipedrive LeadBooster');
+  };
+  document.head.appendChild(script);
+});
 </script>
-<script src="https://leadbooster-chat.pipedrive.com/assets/loader.js" async></script>
 </head>
 <body>
 <!-- Top Left Logo -->

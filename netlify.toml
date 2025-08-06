@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = "echo 'Recruitment APK Static Site Ready =€'"
+  command = "echo 'Recruitment APK Static Site Ready'"
 
 [build.environment]
   NODE_VERSION = "18"

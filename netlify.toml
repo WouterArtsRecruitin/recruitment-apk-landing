@@ -16,12 +16,12 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()"
     Content-Security-Policy = """
       default-src 'self';
-      script-src 'self' 'unsafe-inline' embed.typeform.com *.typeform.com *.googletagmanager.com *.google-analytics.com leadbooster-chat.pipedrive.com *.pipedrive.com;
-      style-src 'self' 'unsafe-inline' fonts.googleapis.com leadbooster-chat.pipedrive.com *.pipedrive.com;
+      script-src 'self' 'unsafe-inline' embed.typeform.com *.typeform.com *.googletagmanager.com *.google-analytics.com;
+      style-src 'self' 'unsafe-inline' fonts.googleapis.com;
       font-src 'self' fonts.gstatic.com;
-      img-src 'self' data: https: leadbooster-chat.pipedrive.com *.pipedrive.com;
-      frame-src embed.typeform.com *.typeform.com leadbooster-chat.pipedrive.com *.pipedrive.com;
-      connect-src 'self' *.typeform.com *.google-analytics.com *.googletagmanager.com leadbooster-chat.pipedrive.com *.pipedrive.com;
+      img-src 'self' data: https:;
+      frame-src embed.typeform.com *.typeform.com;
+      connect-src 'self' *.typeform.com *.google-analytics.com *.googletagmanager.com;
       object-src 'none';
       base-uri 'self';
       form-action 'self' embed.typeform.com;

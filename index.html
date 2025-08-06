@@ -229,33 +229,6 @@ border-radius: 16px;
 background-color: #f3f4f6;
 }
 
-.video-controls {
-margin-top: 15px;
-text-align: center;
-}
-
-.video-control-btn {
-background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-hover) 100%);
-color: white;
-border: none;
-padding: 12px 24px;
-border-radius: 25px;
-font-size: 0.95rem;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-box-shadow: 0 4px 15px rgba(239, 125, 0, 0.3);
-}
-
-.video-control-btn:hover {
-background: linear-gradient(135deg, var(--accent-blue) 0%, var(--bright-blue) 100%);
-transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
-}
-
-.play-icon {
-margin-right: 8px;
-}
 
 .alternative-cta {
 margin-top: 30px;
@@ -651,11 +624,6 @@ document.addEventListener('DOMContentLoaded', function() {
   Je browser ondersteunt geen video.
 </video>
 
-<div class="video-controls">
-  <button id="playPauseBtn" class="video-control-btn" onclick="playVideoWithSound()">
-    <span class="play-icon">🔊</span> Start video met geluid
-  </button>
-</div>
 </div>
 <div class="alternative-cta">
 <p>Of start direct met het assessment:</p>
@@ -758,43 +726,6 @@ link.href = 'https://embed.typeform.com';
 document.head.appendChild(link);
 });
 
-// Video control functions
-function playVideoWithSound() {
-const video = document.getElementById('main-recruitment-video');
-const btn = document.getElementById('playPauseBtn');
-const playIcon = btn.querySelector('.play-icon');
-
-// Start video with sound from beginning
-video.muted = false;
-video.currentTime = 0;
-video.play().then(() => {
-console.log('Video started with sound');
-playIcon.textContent = '⏸️';
-btn.innerHTML = '<span class="play-icon">⏸️</span> Video speelt met geluid';
-btn.onclick = togglePlayPause;
-}).catch(err => {
-console.log('Autoplay blocked, user interaction required:', err);
-// Fallback for browsers that block autoplay
-playIcon.textContent = '▶️';
-btn.innerHTML = '<span class="play-icon">▶️</span> Klik om af te spelen';
-});
-}
-
-function togglePlayPause() {
-const video = document.getElementById('main-recruitment-video');
-const btn = document.getElementById('playPauseBtn');
-const playIcon = btn.querySelector('.play-icon');
-
-if (video.paused) {
-video.play();
-playIcon.textContent = '⏸️';
-btn.innerHTML = '<span class="play-icon">⏸️</span> Pauzeren';
-} else {
-video.pause();
-playIcon.textContent = '▶️';
-btn.innerHTML = '<span class="play-icon">▶️</span> Afspelen';
-}
-}
 
 // Video loading functions
 function showVideoLoading() {
@@ -811,39 +742,14 @@ loading.style.display = 'none';
 }
 }
 
-// Video event listeners
+// Simple video setup
 document.addEventListener('DOMContentLoaded', function() {
 const video = document.getElementById('main-recruitment-video');
-const btn = document.getElementById('playPauseBtn');
 
-// Try to autoplay with sound (may be blocked by browser)
+// Set video to unmuted for direct audio
 video.muted = false;
-video.play().then(() => {
-console.log('Video autoplaying with sound');
-btn.innerHTML = '<span class="play-icon">⏸️</span> Video speelt';
-btn.onclick = togglePlayPause;
-}).catch(err => {
-console.log('Autoplay blocked, showing play button:', err);
-// Show play button if autoplay is blocked
-btn.style.display = 'block';
-btn.innerHTML = '<span class="play-icon">🔊</span> Start video met geluid';
-btn.onclick = playVideoWithSound;
-});
 
-video.addEventListener('ended', function() {
-btn.innerHTML = '<span class="play-icon">🔄</span> Opnieuw bekijken';
-btn.style.opacity = '1';
-btn.style.pointerEvents = 'auto';
-btn.onclick = function() {
-video.currentTime = 0;
-video.muted = false;
-video.play();
-btn.onclick = togglePlayPause;
-};
-});
-
-// Hide button initially, show if needed
-btn.style.display = 'none';
+console.log('Video ready - users can play with built-in controls');
 });
 
 // Function om Typeform te starten na video einde

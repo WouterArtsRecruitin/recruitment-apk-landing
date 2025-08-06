@@ -201,29 +201,6 @@ box-shadow: 0 8px 25px rgba(244, 124, 60, 0.4);
 background: linear-gradient(135deg, #E67E22 0%, var(--accent-orange) 100%);
 }
 
-/* Video Controls */
-.video-controls {
-text-align: center;
-margin: 20px 0;
-}
-
-.video-play-btn {
-background: var(--gradient-cta);
-color: white;
-border: none;
-padding: 15px 30px;
-border-radius: 50px;
-font-size: 1.1rem;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-box-shadow: var(--shadow-soft);
-}
-
-.video-play-btn:hover {
-transform: translateY(-2px);
-box-shadow: var(--shadow-elevated);
-}
 
 /* Rest of the content sections */
 .content-sections {
@@ -560,11 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
   Je browser ondersteunt geen video.
 </video>
 </div>
-<div class="video-controls">
-<button class="video-play-btn" onclick="playVideoWithSound()" aria-label="Start Video met Geluid">
-🔊 VIDEO STARTEN
-</button>
-</div>
 <div class="alternative-cta">
 <p>Of start direct met het assessment:</p>
 <button class="small-cta-button" onclick="openFullScreenAssessment()" aria-label="Start Assessment Direct">
@@ -652,28 +624,12 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
 console.log('🚀 Recruitment APK Video-first versie geladen');
 
-// Video play with sound function
-window.playVideoWithSound = function() {
-  const video = document.getElementById('main-recruitment-video');
-  const playBtn = document.querySelector('.video-play-btn');
-  
-  if (video) {
-    video.muted = false; // Ensure sound is on
-    video.currentTime = 0; // Start from beginning
-    
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        console.log('🔊 Video gestart met geluid');
-        playBtn.style.display = 'none'; // Hide play button after starting
-      }).catch(error => {
-        console.log('⚠️ Autoplay geblokkeerd door browser:', error);
-        // Fallback: gebruiker moet handmatig klikken
-        video.controls = true;
-      });
-    }
-  }
-};
+// Debug Typeform functionality
+console.log('🔍 Checking Typeform elements...');
+const typeformModal = document.getElementById('fullscreen-assessment');
+const typeformIframe = document.getElementById('typeform-iframe');
+console.log('Typeform modal element:', typeformModal);
+console.log('Typeform iframe element:', typeformIframe);
 
 // Preload Typeform resources
 const link = document.createElement('link');
@@ -694,12 +650,30 @@ openFullScreenAssessment();
 
 // Enhanced Open Full Screen Assessment
 function openFullScreenAssessment() {
+console.log('📋 Opening assessment...');
+
 const fullscreenEl = document.getElementById('fullscreen-assessment');
 const iframe = document.getElementById('typeform-iframe');
+
+console.log('Fullscreen element found:', !!fullscreenEl);
+console.log('Iframe element found:', !!iframe);
+
+if (!fullscreenEl) {
+console.error('❌ Fullscreen element not found!');
+return;
+}
+
+if (!iframe) {
+console.error('❌ Typeform iframe not found!');
+return;
+}
 
 // Show fullscreen modal
 fullscreenEl.style.display = 'block';
 document.body.style.overflow = 'hidden';
+
+// Force iframe reload to ensure it works
+iframe.src = iframe.src;
 
 // Analytics tracking
 if (typeof gtag !== 'undefined') {
@@ -709,7 +683,7 @@ gtag('event', 'assessment_started', {
 });
 }
 
-console.log('📋 Assessment gestart');
+console.log('✅ Assessment modal opened successfully');
 }
 
 // Enhanced Close Full Screen Assessment

@@ -144,7 +144,7 @@ overflow: hidden;
 }
 
 .cta-section::before {
-content: '=€';
+content: '=ï¿½';
 position: absolute;
 top: -10px;
 right: -10px;
@@ -461,6 +461,68 @@ padding: 0 20px;
 }
 }
 
+/* Video/Demo Section */
+.demo-section {
+text-align: center;
+margin: 60px 0;
+padding: 50px 30px;
+background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+border-radius: 20px;
+border: 2px solid var(--border-light);
+}
+
+.demo-section h3 {
+color: var(--primary-blue);
+margin-bottom: 30px;
+font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+font-weight: 700;
+}
+
+.video-container {
+position: relative;
+max-width: 600px;
+margin: 0 auto;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: var(--shadow-soft);
+}
+
+.video-placeholder {
+background: linear-gradient(135deg, rgba(27, 54, 93, 0.9) 0%, rgba(74, 144, 164, 0.8) 100%), url('data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+background-size: cover;
+background-position: center;
+aspect-ratio: 16/9;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+color: white;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.video-placeholder:hover {
+transform: scale(1.02);
+}
+
+.play-button {
+font-size: 4rem;
+margin-bottom: 20px;
+background: rgba(244, 124, 60, 0.9);
+width: 80px;
+height: 80px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.3s ease;
+}
+
+.play-button:hover {
+background: var(--accent-orange);
+transform: scale(1.1);
+}
+
 /* Performance optimizations */
 .feature, .cta-button {
 will-change: transform;
@@ -497,27 +559,38 @@ outline-offset: 2px;
 
 <!-- SUPER PROMINENT CTA SECTION -->
 <div class="cta-section">
-<h3><¯ Start Je Assessment</h3>
+<h3><ï¿½ Start Je Assessment</h3>
 <button class="cta-button" onclick="openFullScreenAssessment()" aria-label="Start Assessment Nu">
-=¥ START NU
+=ï¿½ START NU
 </button>
 </div>
 
 <div class="features">
 <div class="feature">
-<div class="feature-icon">=Ê</div>
+<div class="feature-icon">=ï¿½</div>
 <h3>Persoonlijke Score</h3>
 <p>Benchmarking tegen branche-standaarden</p>
 </div>
 <div class="feature">
-<div class="feature-icon"><¯</div>
+<div class="feature-icon"><ï¿½</div>
 <h3>AI Aanbevelingen</h3>
 <p>Gepersonaliseerde verbeterplannen</p>
 </div>
 <div class="feature">
-<div class="feature-icon">=Þ</div>
+<div class="feature-icon">=ï¿½</div>
 <h3>Gratis Strategiegesprek</h3>
-<p>Eén-op-één advies van experts</p>
+<p>Eï¿½n-op-ï¿½ï¿½n advies van experts</p>
+</div>
+</div>
+
+<!-- Demo Video Section -->
+<div class="demo-section">
+<h3>ðŸŽ¥ Bekijk hoe het werkt</h3>
+<div class="video-container">
+<div class="video-placeholder" onclick="openDemoVideo()">
+<div class="play-button">â–¶</div>
+<p><strong>Assessment Demo</strong><br><small>2 minuten overview</small></p>
+</div>
 </div>
 </div>
 
@@ -539,7 +612,7 @@ Professionele groot-scherm assessment voor optimale focus en nauwkeurige resulta
 <!-- Full Screen TypeForm Modal -->
 <div id="fullscreen-assessment" class="fullscreen-typeform" role="dialog" aria-labelledby="assessment-title" aria-modal="true">
 <div class="fullscreen-header">
-<h3 id="assessment-title"><¯ Recruitment APK</h3>
+<h3 id="assessment-title"><ï¿½ Recruitment APK</h3>
 <button class="close-button" onclick="closeFullScreenAssessment()" aria-label="Sluiten">&times;</button>
 </div>
 <div class="typeform-content">
@@ -563,7 +636,7 @@ Professionele groot-scherm assessment voor optimale focus en nauwkeurige resulta
 <script>
 // Recruitment APK - Enhanced Full Screen TypeForm
 document.addEventListener('DOMContentLoaded', function() {
-console.log('=€ Recruitment APK Full Screen versie geladen');
+console.log('=ï¿½ Recruitment APK Full Screen versie geladen');
 
 // Preload Typeform resources
 const link = document.createElement('link');
@@ -604,7 +677,7 @@ gtag('event', 'assessment_started', {
 });
 }
 
-console.log('=Ë TypeForm geopend');
+console.log('=ï¿½ TypeForm geopend');
 }
 
 // Enhanced Close Full Screen Assessment
@@ -667,6 +740,19 @@ document.getElementById('loading-overlay').style.display = 'none';
 console.log(' Typeform succesvol geladen');
 }
 });
+
+// Demo Video Function
+function openDemoVideo() {
+// Vervang door jouw YouTube URL of lokale video
+const videoUrl = "https://www.youtube.com/embed/YOUR_VIDEO_ID";
+
+// Of voor lokale video:
+// window.open('images/demo-video.mp4', '_blank');
+
+alert('Voeg hier jouw video URL toe!\n\nOpties:\n1. YouTube: vervang YOUR_VIDEO_ID\n2. Lokale video: upload naar /images/ folder\n3. Vimeo of andere platform');
+
+console.log('ðŸ“¹ Demo video geklikt');
+}
 
 // CTA Button interaction tracking
 document.querySelector('.cta-button').addEventListener('click', function() {

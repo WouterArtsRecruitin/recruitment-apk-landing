@@ -1,6 +1,7 @@
 [build]
   publish = "."
   command = "echo 'Recruitment APK Static Site Ready'"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -42,6 +43,12 @@
   for = "*.js"  
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# API Redirects
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 # Useful Redirects
 [[redirects]]

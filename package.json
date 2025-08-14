@@ -1,0 +1,28 @@
+{
+  "name": "recruitment-apk-landing",
+  "version": "1.0.0",
+  "description": "Recruitment APK Assessment Landing Page with Webhook Support",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Static site - no build step required'",
+    "start": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "keywords": [
+    "recruitment",
+    "assessment",
+    "apk",
+    "typeform",
+    "webhook",
+    "automation"
+  ],
+  "author": "Wouter Arts Recruitin",
+  "license": "MIT"
+}

@@ -1,5 +1,6 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
   command = "echo 'Recruitment APK Static Site Ready'"
   functions = "netlify/functions"
 
@@ -71,3 +72,11 @@
   from = "/*"
   to = "/index.html"
   status = 404
+
+# Function CORS headers
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type"
+    Access-Control-Allow-Methods = "POST, GET, OPTIONS"

@@ -827,6 +827,136 @@ gap: 20px;
 grid-template-columns: 1fr;
 }
 }
+
+/* Rating Widget Styles */
+#rating-widget {
+text-align: center;
+padding: 32px 24px;
+background: linear-gradient(135deg, rgba(50, 55, 60, 0.05) 0%, rgba(239, 125, 0, 0.05) 100%);
+border-radius: 16px;
+border: 2px solid var(--border-light);
+margin: 48px auto;
+max-width: 500px;
+box-shadow: 0 2px 12px rgba(50, 55, 60, 0.08);
+transition: all 0.3s ease;
+}
+
+#rating-widget:hover {
+box-shadow: 0 4px 20px rgba(50, 55, 60, 0.12);
+border-color: var(--primary-orange);
+}
+
+#rating-stars {
+font-size: 28px;
+margin-bottom: 12px;
+letter-spacing: 4px;
+color: var(--primary-orange);
+}
+
+#rating-text {
+font-size: 20px;
+font-weight: 700;
+color: var(--dark-gray);
+margin-bottom: 8px;
+}
+
+#rating-count {
+font-size: 14px;
+color: var(--neutral-gray);
+margin-bottom: 16px;
+}
+
+#rating-widget p {
+font-size: 12px;
+color: var(--neutral-gray);
+margin: 0;
+}
+
+.rating-feedback-form {
+margin-top: 20px;
+padding-top: 20px;
+border-top: 1px solid var(--border-light);
+display: none;
+}
+
+.rating-feedback-form.show {
+display: block;
+}
+
+.rating-feedback-form label {
+display: block;
+margin-bottom: 12px;
+font-weight: 600;
+color: var(--dark-gray);
+text-align: left;
+}
+
+.rating-feedback-form input {
+width: 100%;
+padding: 10px 12px;
+border: 1px solid var(--border-light);
+border-radius: 8px;
+font-size: 14px;
+font-family: 'Inter', sans-serif;
+transition: all 0.2s ease;
+}
+
+.rating-feedback-form input:focus {
+outline: none;
+border-color: var(--primary-orange);
+box-shadow: 0 0 0 3px rgba(239, 125, 0, 0.1);
+}
+
+.rating-stars-input {
+display: flex;
+justify-content: center;
+gap: 8px;
+margin-bottom: 16px;
+}
+
+.star-btn {
+background: none;
+border: none;
+font-size: 28px;
+cursor: pointer;
+padding: 0;
+transition: transform 0.2s ease;
+opacity: 0.4;
+}
+
+.star-btn:hover,
+.star-btn.active {
+opacity: 1;
+color: var(--primary-orange);
+}
+
+.star-btn:hover {
+transform: scale(1.15);
+}
+
+.rating-submit-btn {
+width: 100%;
+padding: 12px;
+background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-hover) 100%);
+color: white;
+border: none;
+border-radius: 8px;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+margin-top: 12px;
+}
+
+.rating-submit-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(239, 125, 0, 0.3);
+}
+
+.rating-submit-btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
 </style>
 
 </head>
@@ -932,6 +1062,30 @@ grid-template-columns: 1fr;
   loading="lazy">
 </iframe>
 </div>
+</div>
+
+<!-- Rating Widget -->
+<div id="rating-widget" role="region" aria-labelledby="rating-title" style="opacity: 0.6;">
+  <div id="rating-stars" aria-hidden="true">★★★★☆</div>
+  <div id="rating-text">Laden...</div>
+  <div id="rating-count">Bezig met laden van beoordelingen...</div>
+  <p>Gebaseerd op directe feedback van gebruikers</p>
+
+  <form id="feedback-form" class="rating-feedback-form">
+    <label>Hoe zou je je ervaring beoordelen?</label>
+    <div class="rating-stars-input" id="stars-input">
+      <button type="button" class="star-btn">★</button>
+      <button type="button" class="star-btn">★</button>
+      <button type="button" class="star-btn">★</button>
+      <button type="button" class="star-btn">★</button>
+      <button type="button" class="star-btn">★</button>
+    </div>
+
+    <label style="margin-top: 16px;">Email (optioneel)</label>
+    <input type="email" id="feedback-email" placeholder="jouw@email.nl">
+
+    <button type="button" id="submit-rating" class="rating-submit-btn">Beoordeeling Indienen</button>
+  </form>
 </div>
 
 <script>
@@ -1064,6 +1218,100 @@ gtag('event', 'cta_button_click', {
 'event_label': 'direct_start_button'
 });
 }
+});
+
+// Rating Widget
+const loadRatingStats = async () => {
+  try {
+    const response = await fetch('/.netlify/functions/rating-stats');
+    if (!response.ok) throw new Error('Failed to load rating stats');
+    const data = await response.json();
+
+    const average = data.average ? data.average.toFixed(1) : '0.0';
+    const total = data.total || 0;
+    const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+
+    document.getElementById('rating-stars').textContent = stars;
+    document.getElementById('rating-text').textContent = `${average}/5.0 sterren`;
+    document.getElementById('rating-count').textContent = `${total} beoordelingen`;
+
+    document.getElementById('rating-widget').style.opacity = '1';
+
+    // Show feedback form on click
+    document.getElementById('rating-widget').addEventListener('click', function(e) {
+      if (!e.target.closest('.rating-feedback-form')) {
+        document.getElementById('feedback-form').classList.toggle('show');
+      }
+    });
+  } catch (error) {
+    console.error('Rating stats error:', error);
+    document.getElementById('rating-text').textContent = 'Beoordelingen laden...';
+  }
+};
+
+// Star rating input
+const starsInput = document.getElementById('stars-input');
+let selectedRating = 0;
+
+starsInput.querySelectorAll('.star-btn').forEach((btn, index) => {
+  btn.addEventListener('click', function() {
+    selectedRating = index + 1;
+    starsInput.querySelectorAll('.star-btn').forEach((b, i) => {
+      b.classList.toggle('active', i < selectedRating);
+    });
+  });
+});
+
+// Submit feedback
+document.getElementById('submit-rating').addEventListener('click', async function() {
+  if (selectedRating === 0) {
+    alert('Selecteer alstublieft een rating');
+    return;
+  }
+
+  this.disabled = true;
+  this.textContent = 'Bezig met verzenden...';
+
+  try {
+    const email = document.getElementById('feedback-email').value || null;
+    const response = await fetch('/.netlify/functions/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        rating: selectedRating,
+        email: email,
+        product: 'recruitment-apk'
+      })
+    });
+
+    if (response.ok) {
+      document.getElementById('feedback-email').value = '';
+      selectedRating = 0;
+      starsInput.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'rapport_rating', {
+          'event_category': 'engagement',
+          'event_label': 'recruitment-apk',
+          'rating': selectedRating
+        });
+      }
+
+      loadRatingStats();
+      this.textContent = 'Dank je wel! ✓';
+      setTimeout(() => { this.textContent = 'Beoordeeling Indienen'; this.disabled = true; }, 2000);
+    } else {
+      this.textContent = 'Fout bij verzenden';
+    }
+  } catch (error) {
+    console.error('Feedback submit error:', error);
+    this.textContent = 'Fout bij verzenden';
+  } finally {
+    this.disabled = false;
+  }
+});
+
+loadRatingStats();
 });
 </script>
 

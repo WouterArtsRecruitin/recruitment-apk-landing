@@ -1162,10 +1162,25 @@ gtag('event', 'assessment_started', {
 'event_category': 'engagement',
 'event_label': 'typeform_assessment'
 });
+gtag('event', 'form_start', { form_name: 'recruitment_apk' });
 }
 
 console.log('✅ Assessment modal opened successfully');
 }
+
+// Typeform postMessage listener — fire form_submit on assessment completion
+window.addEventListener('message', function(e) {
+  if (!e.origin || !/typeform\.com$/.test(new URL(e.origin).hostname)) return;
+  var d = e.data || {};
+  var t = d.type || d.event || '';
+  if (t === 'form-submit' || t === 'form_submit' || t === 'tf-form-submit') {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'form_submit', { form_name: 'recruitment_apk' });
+      gtag('event', 'generate_lead', { event_category: 'recruitment_apk', event_label: 'typeform_completed' });
+    }
+    if (typeof fbq !== 'undefined') { try { fbq('track', 'Lead', { content_name: 'Recruitment APK' }); } catch(_){} }
+  }
+});
 
 // Enhanced Close Full Screen Assessment
 function closeFullScreenAssessment() {

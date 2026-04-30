@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_API_KEY = process.env.SUPABASE_KEY;
 const GA4_API_SECRET = process.env.GA4_API_SECRET;
-const GA4_MEASUREMENT_ID = 'G-LKNTCG74ME'; // APK property
+const GA4_MEASUREMENT_ID = 'G-2Q8P8VK20G'; // APK property
 const META_PIXEL_ID = process.env.META_PIXEL_ID; // from .env
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 
